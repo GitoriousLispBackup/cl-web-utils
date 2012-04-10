@@ -59,12 +59,20 @@
              ,(when (not (eql code 200)) rtn)))))))
 
 (defun http-arg-no-encode (arg)
+  "Returns true if ``arg'' is a symbol and if the first character of
+it is an underscore. "
   (and (symbolp arg) (char= (aref (symbol-name arg) 0) #\_)))
 
 (defun http-arg-no-encode-base (arg)
+  "Returns the name of the ``arg'' (without the leading underscore)."
   (intern (subseq (symbol-name arg) 1)))
 
 (defun camel-caps (str)
+  "Converts ``str'', a string using dashes as separator, into a camel
+capped string.
+
+Example: hello-world-how-are-you
+Output:  helloWorldHowAreYou"
   (apply #'concatenate 'string (loop for el in (split-sequence #\- str)
 				     for start = t then nil
 				     collect (if start el (string-capitalize el)))))
@@ -72,6 +80,11 @@
 (defmacro define-http-request (name args url &key additional-headers
                                (convert-dash t) camel-caps
                                cookie-jar)
+  "Defines a new function named ``name'' that uses ``args'' as its
+argument list. The ``additional-headers'' is an assoc-list of settings
+for headers. When ``convert-dash'' is true, dashes are converted to
+underscores. When ``camel-caps'' is true, converts variable names to
+camel capped names. The ``cookie-jar'' is a container for cookies."
   `(defun ,name ,args
      (simple-http-request ,url ,args
                           :additional-headers ,additional-headers
@@ -80,6 +93,14 @@
 
 (defmacro define-json-request (name args url &key (convert-dash t)
                                trim-callback method all-args-p)
+  "Defines a new function named ``name'' that uses ``args'' (encoded
+and un-encoded arguments) as its argument list. The ``url'' is the URL
+to use. When ``convert-dash'' is true, dashes are converted to
+underscores. When ``trim-callback'' is true, the function
+TRIM-CALLBACK is called with the argument being the output of
+FROM-JSON; otherwise returns the output of FROM-JSON.
+
+Sets an additional header 'Accept' to 'applicaton/json'."
   `(defun ,name ,(loop for arg in args
                        if (http-arg-no-encode arg)
                          collect (http-arg-no-encode-base arg)
@@ -99,6 +120,7 @@
            ,@rest)))))
 
 (defun trim-callback (string)
+  "Trims unnecessary charcters from ``string''."
   (subseq string (1+ (position #\( string)) (position #\) string :from-end t)))
 
 (defmacro define-xml-request (name args url &key additional-headers
