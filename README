@@ -14,3 +14,4 @@ They are the chief exports of the cl-web-utils package. Other small niceties fro
 the stylistic (concat ...) as an abbreviation of (concatenate 'string ...) to
 slightly more intuitive stdlib functions (last1 ...) in lieu of (car (last ...))
 and others like (parse-float ...) and (md5 ...).
+
