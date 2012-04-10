@@ -5,7 +5,7 @@
   :author "Will Halliburton"
   :maintainer "Brit Butler <redline6561@gmail.com>"
   :license "LLGPL"
-  :depends-on (:drakma :cxml :cl-json :md5 :split-sequence)
+  :depends-on (:drakma :cxml :cl-json :md5 :split-sequence :alexandria)
   :serial t
   :components ((:file "packages")
                (:file "helpers")
