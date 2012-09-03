@@ -3,7 +3,8 @@
   (:import-from :drakma :http-request
                         :url-encode)
   (:import-from :split-sequence :split-sequence)
-  (:export #:define-xml-request
+  (:export #:simple-http-request
+           #:define-xml-request
            #:define-json-request
            #:define-http-request
            #:nor
